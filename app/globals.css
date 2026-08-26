@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/* Class-based dark mode: useTheme() toggles `.dark` on <html>. Without this,
+   Tailwind v4 resolves `dark:` from prefers-color-scheme and ignores the toggle. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Semantic color tokens used across the components (bg-canvas, text-ink,
+   border-hairline, bg-card, bg-accent, ...). These map onto the CSS variables below. */
+@theme inline {
+  --color-canvas: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-soft);
+  --color-surface-raised: var(--surface-raised);
+  --color-card: var(--surface-raised);
+  --color-column: var(--surface-soft);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-hairline: var(--line);
+  --color-hairline-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+}
+
+@utility kanban-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background-clip: content-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+}
+
+:root {
+  --bg: #f5f4ef;
+  --surface: #ffffff;
+  --surface-soft: #f9f8f4;
+  --surface-raised: #ffffff;
+  --ink: #182030;
+  --muted: #747a86;
+  --faint: #a6a8ae;
+  --line: #e3e1da;
+  --line-strong: #d5d2c9;
+  --accent: #ef6047;
+  --accent-hover: #dc4d36;
+  --accent-soft: #fff0eb;
+  --shadow: 0 1px 2px rgba(25, 29, 38, .04), 0 7px 24px rgba(25, 29, 38, .05);
+}
+
+.dark {
+  --bg: #111318;
+  --surface: #191c23;
+  --surface-soft: #15181e;
+  --surface-raised: #20242c;
+  --ink: #f1f2f4;
+  --muted: #a0a5ae;
+  --faint: #777d88;
+  --line: #2b2f38;
+  --line-strong: #3a3f49;
+  --accent: #ff7058;
+  --accent-hover: #ff806a;
+  --accent-soft: #37211e;
+  --shadow: 0 10px 28px rgba(0, 0, 0, .18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  color: inherit;
+}
