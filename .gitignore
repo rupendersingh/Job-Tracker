@@ -35,7 +35,6 @@ yarn-error.log*
 next-env.d.ts
 
 # build & runtime artifacts
-/dist/
 /.wrangler/
 /.sites-runtime/
 /work/
