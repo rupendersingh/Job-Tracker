@@ -21,7 +21,7 @@ board, log interviews, and review pipeline statistics.
 - **Interview log** — schedule and note upcoming rounds.
 - **Statistics** — pipeline health, application activity, conversion rates,
   response rates, and a yearly heatmap.
-- **Backup & restore** — export a JSON backup and import it as needed.
+- **Backup & restore** — export a JSON backup and import it as needed
 
 ## Tech stack
 
