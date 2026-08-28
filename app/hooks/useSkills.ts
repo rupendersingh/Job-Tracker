@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { getAllSkills, putSkill, replaceAllSkills } from "../job-db";
+import { ensureSeeded } from "../seed";
 import type { SkillRecord } from "../constants";
 
 export function useSkills() {
@@ -9,7 +10,8 @@ export function useSkills() {
 
   useEffect(() => {
     let cancelled = false;
-    getAllSkills()
+    ensureSeeded()
+      .then(getAllSkills)
       .then((rows) => {
         if (!cancelled) setCustomSkills(rows);
       })

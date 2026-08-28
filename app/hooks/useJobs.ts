@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { deleteJob, getAllJobs, putJob, replaceAllJobs } from "../job-db";
+import { ensureSeeded } from "../seed";
 import { hydrateJob, isJobShape, normalizeImportedJob } from "../utils";
 import type { Job } from "../constants";
 
@@ -12,7 +13,8 @@ export function useJobs() {
 
   useEffect(() => {
     let cancelled = false;
-    getAllJobs()
+    ensureSeeded()
+      .then(getAllJobs)
       .then(async (rows) => {
         const next: Job[] = [];
         for (const row of rows) {

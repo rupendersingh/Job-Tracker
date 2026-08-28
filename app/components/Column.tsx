@@ -33,6 +33,7 @@ export function Column({ column, jobs, onOpen }: ColumnProps) {
       </header>
       <div
         ref={setNodeRef}
+        data-column-scroll
         className={`kanban-scroll mx-2 mb-2 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto rounded-xl px-1 pb-2 transition duration-150 ${
           isOver ? column.wellOver : column.well
         }`}

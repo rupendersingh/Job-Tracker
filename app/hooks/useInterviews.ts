@@ -7,6 +7,7 @@ import {
   putInterview,
   replaceAllInterviews,
 } from "../job-db";
+import { ensureSeeded } from "../seed";
 import { isInterviewShape, normalizeImportedInterview } from "../utils";
 import type { Interview } from "../constants";
 
@@ -16,7 +17,8 @@ export function useInterviews() {
 
   useEffect(() => {
     let cancelled = false;
-    getAllInterviews()
+    ensureSeeded()
+      .then(getAllInterviews)
       .then((rows) => {
         if (!cancelled) {
           setInterviews(
