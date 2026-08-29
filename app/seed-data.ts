@@ -6,10 +6,8 @@ import type { Interview, Job, SkillRecord } from "./constants";
  * search — the app is local-first, so whatever a visitor adds afterwards
  * lives only in their own browser.
  *
- * `next.config.ts` inlines the deploying commit SHA here, so each deployment
- * carries a new stamp and re-seeds the board (see `seed.ts`).
+ * Loaded only into a browser that has nothing stored yet — see `seed.ts`.
  */
-export const SEED_STAMP = process.env.NEXT_PUBLIC_SEED_STAMP || "dev";
 
 type SeedJob = Omit<Job, "dateApplied" | "createdAt" | "updatedAt"> & {
   appliedDaysAgo: number;

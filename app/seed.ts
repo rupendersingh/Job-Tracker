@@ -1,37 +1,61 @@
-import { replaceAllInterviews, replaceAllJobs, replaceAllSkills } from "./job-db";
-import { SEED_STAMP, buildSeedData } from "./seed-data";
+import {
+  getAllInterviews,
+  getAllJobs,
+  getAllSkills,
+  replaceAllInterviews,
+  replaceAllJobs,
+  replaceAllSkills,
+} from "./job-db";
+import { buildSeedData } from "./seed-data";
 
-const STAMP_KEY = "job-tracker-seed-stamp";
+const SEEDED_KEY = "job-tracker-seeded";
 
 /**
- * Loads the bundled demo board once per deployment. The stamp is the commit
- * SHA baked in at build time, so a new deployment re-seeds and REPLACES
- * whatever is in this browser. Within a deployment the stamp is stable, so
- * ordinary edits survive reloads.
+ * Loads the bundled demo board, but only into a browser that has never been
+ * seeded AND has nothing stored. Deployments never overwrite what someone has
+ * in their browser: once this browser has been through the check, the flag
+ * keeps it from seeding again — including after the user deletes everything
+ * on purpose.
  */
 async function runSeed(): Promise<void> {
   if (typeof window === "undefined") return;
 
-  let stored: string | null = null;
+  let alreadySeeded = false;
   try {
-    stored = window.localStorage.getItem(STAMP_KEY);
+    alreadySeeded = window.localStorage.getItem(SEEDED_KEY) === "1";
   } catch {
-    // Storage blocked (private mode, third-party restrictions): skip seeding
-    // rather than wiping the board on every single load.
+    // Storage blocked (private mode, third-party restrictions). Without a
+    // flag we cannot tell a first visit from a deliberate reset, so leave
+    // whatever is in IndexedDB alone.
     return;
   }
-  if (stored === SEED_STAMP) return;
+  if (alreadySeeded) return;
 
-  const { jobs, interviews, skills } = buildSeedData();
-  await replaceAllJobs(jobs);
-  await replaceAllInterviews(interviews);
-  await replaceAllSkills(skills);
+  const markSeeded = () => {
+    try {
+      window.localStorage.setItem(SEEDED_KEY, "1");
+    } catch {
+      // Non-fatal: the check simply runs again next load.
+    }
+  };
 
-  try {
-    window.localStorage.setItem(STAMP_KEY, SEED_STAMP);
-  } catch {
-    // Non-fatal: the board is seeded, it just may seed again next load.
+  const [jobs, interviews, skills] = await Promise.all([
+    getAllJobs(),
+    getAllInterviews(),
+    getAllSkills(),
+  ]);
+  if (jobs.length || interviews.length || skills.length) {
+    // An existing board — this browser predates seeding. Record that so the
+    // empty check never runs against it again.
+    markSeeded();
+    return;
   }
+
+  const seed = buildSeedData();
+  await replaceAllJobs(seed.jobs);
+  await replaceAllInterviews(seed.interviews);
+  await replaceAllSkills(seed.skills);
+  markSeeded();
 }
 
 let pending: Promise<void> | null = null;
